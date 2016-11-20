@@ -18,13 +18,15 @@
 
 #include "SpektrumDSM.h"
 
+SpektrumDSM rx;
+
 void setup() {
-    initRX();
+    rx.begin();
 }
 
 void loop() {
     for (int k=0; k<8; ++k) {
-        Serial.print(getRcValue(k));
+        Serial.print(rx.getChannelValue(k));
         Serial.print("  ");
     }
     Serial.println();

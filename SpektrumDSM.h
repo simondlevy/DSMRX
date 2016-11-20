@@ -17,6 +17,11 @@
 
 #include <stdint.h>
 
-void initRX();
+class SpektrumDSM {
 
-uint16_t getRcValue(uint8_t chan);
+public:
+
+    void begin();
+
+    uint16_t getChannelValue(uint8_t chan);
+};

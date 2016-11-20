@@ -39,12 +39,12 @@ volatile uint16_t rcValue[8];
 static volatile uint8_t rxBufPos;
 static uint8_t rxBuf[RX_BUFFER_SIZE];
 
-void initRX() {
-    // serial port for spektrum sat rx
+void SpektrumDSM::begin() {
+    
     Serial1.begin(115200);  
 }
 
-uint16_t getRcValue(uint8_t chan)
+uint16_t SpektrumDSM::getChannelValue(uint8_t chan)
 {
     return rcValue[chan];
 }
