@@ -18,14 +18,14 @@
 
 #include "SpektrumDSM.h"
 
-SpektrumDSM rx;
+SpektrumDSM2048 rx;
 
 void setup() {
     rx.begin();
 }
 
 void loop() {
-    for (int k=0; k<8; ++k) {
+    for (int k=0; k<6; ++k) {
         Serial.print(rx.getChannelValue(k));
         Serial.print("  ");
     }
