@@ -58,7 +58,7 @@ static void parseRXData() {
         uint8_t bl = rxBuf[b+1];
         uint8_t spekChannel = 0x0F & (bh >> SPEK_CHAN_SHIFT);
         if (spekChannel < 8)  
-            rcValue[spekChannel] = 988 + ((((uint16_t)(bh & SPEK_CHAN_MASK) << 8) + bl) >> SPEK_RIGHT_SHIFT);
+            rcValue[spekChannel] = 988 + ((((uint32_t)(bh & SPEK_CHAN_MASK) << 8) + bl) >> SPEK_RIGHT_SHIFT);
     }
 }
 
