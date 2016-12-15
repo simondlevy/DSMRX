@@ -27,11 +27,6 @@
 #define SPEK_CHAN_MASK_1024   0x03    
 #define SPEK_RIGHT_SHIFT_1024 0
 
-// 2048 mode
-#define SPEK_CHAN_SHIFT_2048  3       
-#define SPEK_CHAN_MASK_2048   0x07    
-#define SPEK_RIGHT_SHIFT_2048 1
-
 volatile uint16_t rcValue[8];
 
 #define SPEK_FRAME_SIZE (16)
@@ -48,9 +43,9 @@ void SpektrumDSM::begin() {
     
     Serial1.begin(115200);
 
-    _chan_shift = SPEK_CHAN_SHIFT_2048;
-    _chan_mask  = SPEK_CHAN_MASK_2048;
-    _right_shift = SPEK_RIGHT_SHIFT_2048;
+    _chan_shift  = m_chan_shift;
+    _chan_mask   = m_chan_mask;
+    _right_shift = m_right_shift;
 }
 
 uint16_t SpektrumDSM::getChannelValue(uint8_t chan)

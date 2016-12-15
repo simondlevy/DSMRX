@@ -19,9 +19,28 @@
 
 class SpektrumDSM {
 
-public:
+    private:
 
-    void begin();
+        uint8_t m_chan_shift;
+        uint8_t m_chan_mask;
+        uint8_t m_right_shift;
 
-    uint16_t getChannelValue(uint8_t chan);
+    protected:
+
+        SpektrumDSM(uint8_t chan_shift, uint8_t chan_mask, uint8_t right_shift) :
+            m_chan_shift(chan_shift), m_chan_mask(chan_mask), m_right_shift(right_shift) { }
+
+
+    public:
+
+        void begin();
+
+        uint16_t getChannelValue(uint8_t chan);
+};
+
+class SpektrumDSM2048 : public SpektrumDSM {
+
+    public:
+
+        SpektrumDSM2048(void) : SpektrumDSM(3, 0x07, 1) { }
 };
