@@ -38,6 +38,13 @@ class SpektrumDSM {
         uint16_t getChannelValue(uint8_t chan);
 };
 
+class SpektrumDSM1024 : public SpektrumDSM {
+
+    public:
+
+        SpektrumDSM1024(void) : SpektrumDSM(2, 0x03, 0) { }
+};
+
 class SpektrumDSM2048 : public SpektrumDSM {
 
     public:

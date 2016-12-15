@@ -21,12 +21,6 @@
 
 #include <Arduino.h>
 
-
-// 1024 mode
-#define SPEK_CHAN_SHIFT_1024  2       
-#define SPEK_CHAN_MASK_1024   0x03    
-#define SPEK_RIGHT_SHIFT_1024 0
-
 volatile uint16_t rcValue[8];
 
 #define SPEK_FRAME_SIZE (16)
@@ -43,6 +37,7 @@ void SpektrumDSM::begin() {
     
     Serial1.begin(115200);
 
+    // For communicating with parseRxData() below
     _chan_shift  = m_chan_shift;
     _chan_mask   = m_chan_mask;
     _right_shift = m_right_shift;
@@ -54,7 +49,7 @@ uint16_t SpektrumDSM::getChannelValue(uint8_t chan)
 }
 
 // parse raw serial data into channels
-static void parseRXData() {
+static void parseRxData() {
     // convert to channel data in the 1000-2000 range
     for (int b = 2; b < SPEK_FRAME_SIZE; b += 2)
     {
@@ -89,5 +84,5 @@ void serialEvent1() {
 
     // parse frame if done
     if (rxBufPos == SPEK_FRAME_SIZE)
-        parseRXData();
+        parseRxData();
 }
