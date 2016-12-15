@@ -21,27 +21,36 @@
 
 #include <Arduino.h>
 
-#define SPEK_FRAME_SIZE 16       
 
 // 1024 mode
-//#define SPEK_CHAN_SHIFT  2       
-//#define SPEK_CHAN_MASK   0x03    
-//#define SPEK_RIGHT_SHIFT 0
+#define SPEK_CHAN_SHIFT_1024  2       
+#define SPEK_CHAN_MASK_1024   0x03    
+#define SPEK_RIGHT_SHIFT_1024 0
 
 // 2048 mode
-#define SPEK_CHAN_SHIFT  3       
-#define SPEK_CHAN_MASK   0x07    
-#define SPEK_RIGHT_SHIFT 1
+#define SPEK_CHAN_SHIFT_2048  3       
+#define SPEK_CHAN_MASK_2048   0x07    
+#define SPEK_RIGHT_SHIFT_2048 1
 
 volatile uint16_t rcValue[8];
 
+#define SPEK_FRAME_SIZE (16)
 #define RX_BUFFER_SIZE (16)
+
 static volatile uint8_t rxBufPos;
 static uint8_t rxBuf[RX_BUFFER_SIZE];
 
+static uint8_t _chan_shift;
+static uint8_t _chan_mask;
+static uint8_t _right_shift;
+
 void SpektrumDSM::begin() {
     
-    Serial1.begin(115200);  
+    Serial1.begin(115200);
+
+    _chan_shift = SPEK_CHAN_SHIFT_2048;
+    _chan_mask  = SPEK_CHAN_MASK_2048;
+    _right_shift = SPEK_RIGHT_SHIFT_2048;
 }
 
 uint16_t SpektrumDSM::getChannelValue(uint8_t chan)
@@ -56,9 +65,9 @@ static void parseRXData() {
     {
         uint8_t bh = rxBuf[b];
         uint8_t bl = rxBuf[b+1];
-        uint8_t spekChannel = 0x0F & (bh >> SPEK_CHAN_SHIFT);
+        uint8_t spekChannel = 0x0F & (bh >> _chan_shift);
         if (spekChannel < 8)  
-            rcValue[spekChannel] = 988 + ((((uint32_t)(bh & SPEK_CHAN_MASK) << 8) + bl) >> SPEK_RIGHT_SHIFT);
+            rcValue[spekChannel] = 988 + ((((uint32_t)(bh & _chan_mask) << 8) + bl) >> _right_shift);
     }
 }
 
