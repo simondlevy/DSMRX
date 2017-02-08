@@ -18,16 +18,27 @@
 
 #include "SpektrumDSM.h"
 
-SpektrumDSM2048 rx;
+SpektrumDSM rx;
+
+static uint8_t chanmap[5] = {1, 2, 3, 0, 5};
 
 void setup() {
-    rx.begin();
+  
+  Serial.begin(115200);
+  
+  rx.begin(SERIALRX_SPEKTRUM2048);
 }
 
 void loop() {
-    for (int k=0; k<6; ++k) {
-        Serial.print(rx.getChannelValue(k));
-        Serial.print("  ");
+
+    if (rx.frameComplete()) {
+        for (int k=0; k<5; ++k)
+            Serial.printf("%d ", rx.readRawRC(chanmap[k]));
+        Serial.printf("\n");
     }
-    Serial.println();
+
+    // Allow some time between readings
+    delay(10);  
+
+    
 }
