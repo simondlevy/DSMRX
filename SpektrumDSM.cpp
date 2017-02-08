@@ -74,19 +74,16 @@ static void parseRxData() {
 
 // check for new frame, i.e. more than 2.5ms passed
 uint32_t spekTimeLast = 0;
-void checkForNewFrame() {
+
+// RX interrupt
+void serialEvent1() {
+
     uint32_t spekTimeNow = micros();
     uint32_t spekInterval = spekTimeNow - spekTimeLast;
     spekTimeLast = spekTimeNow;
     if (spekInterval > 2500) {
         rxBufPos = 0;
     }
-}
-
-// RX interrupt
-void serialEvent1() {
-
-    checkForNewFrame();
 
     // put the data in buffer
     while ((Serial1.available()) && (rxBufPos < RX_BUFFER_SIZE))
