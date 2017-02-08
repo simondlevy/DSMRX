@@ -72,11 +72,11 @@ static void parseRxData() {
 }
 
 
-// check for new frame, i.e. more than 2.5ms passed
-uint32_t spekTimeLast = 0;
-
 // RX interrupt
 void serialEvent1() {
+
+    // check for new frame, i.e. more than 2.5ms passed
+    static uint32_t spekTimeLast;
 
     uint32_t spekTimeNow = micros();
     uint32_t spekInterval = spekTimeNow - spekTimeLast;
