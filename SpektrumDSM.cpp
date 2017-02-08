@@ -29,7 +29,6 @@ volatile uint16_t rcValue[8];
 static volatile uint8_t rxBufPos;
 static uint8_t rxBuf[RX_BUFFER_SIZE];
 
-// For communicating with parseRxData()
 static uint8_t _chan_shift;
 static uint8_t _chan_mask;
 static uint8_t _right_shift;
@@ -58,20 +57,6 @@ uint16_t SpektrumDSM::getChannelValue(uint8_t chan)
     return rcValue[chan];
 }
 
-// parse raw serial data into channels
-static void parseRxData() {
-    // convert to channel data in the 1000-2000 range
-    for (int b = 2; b < SPEK_FRAME_SIZE; b += 2)
-    {
-        uint8_t bh = rxBuf[b];
-        uint8_t bl = rxBuf[b+1];
-        uint8_t spekChannel = 0x0F & (bh >> _chan_shift);
-        if (spekChannel < 8)  
-            rcValue[spekChannel] = 988 + ((((uint32_t)(bh & _chan_mask) << 8) + bl) >> _right_shift);
-    }
-}
-
-
 // RX interrupt
 void serialEvent1() {
 
@@ -90,6 +75,16 @@ void serialEvent1() {
         rxBuf[rxBufPos++] = (char)Serial1.read();
 
     // parse frame if done
-    if (rxBufPos == SPEK_FRAME_SIZE)
-        parseRxData();
+    if (rxBufPos == SPEK_FRAME_SIZE) {
+
+        // convert to channel data in the 1000-2000 range
+        for (int b = 2; b < SPEK_FRAME_SIZE; b += 2)
+        {
+            uint8_t bh = rxBuf[b];
+            uint8_t bl = rxBuf[b+1];
+            uint8_t spekChannel = 0x0F & (bh >> _chan_shift);
+            if (spekChannel < 8)  
+                rcValue[spekChannel] = 988 + ((((uint32_t)(bh & _chan_mask) << 8) + bl) >> _right_shift);
+        }
+    }
 }
