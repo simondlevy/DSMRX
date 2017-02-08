@@ -29,19 +29,29 @@ volatile uint16_t rcValue[8];
 static volatile uint8_t rxBufPos;
 static uint8_t rxBuf[RX_BUFFER_SIZE];
 
+// For communicating with parseRxData()
 static uint8_t _chan_shift;
 static uint8_t _chan_mask;
 static uint8_t _right_shift;
 
-void SpektrumDSM::begin() {
+void SpektrumDSM1024::begin() {
     
     Serial1.begin(115200);
 
-    // For communicating with parseRxData() below
-    _chan_shift  = m_chan_shift;
-    _chan_mask   = m_chan_mask;
-    _right_shift = m_right_shift;
+    _chan_shift  = 2;
+    _chan_mask   = 0x03;
+    _right_shift = 0;
 }
+
+void SpektrumDSM2048::begin() {
+    
+    Serial1.begin(115200);
+
+    _chan_shift  = 3;
+    _chan_mask   = 0x07;
+    _right_shift = 1;
+}
+
 
 uint16_t SpektrumDSM::getChannelValue(uint8_t chan)
 {
