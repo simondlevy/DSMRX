@@ -36,26 +36,12 @@ void serialEvent1(void)
     }
 }
 
-
-void SpektrumDSM::begin(serialrx_t serialrx_type)
+void SpektrumDSM::begin(uint8_t cs, uint8_t cm, bool hr, uint8_t nc)
 {
-    switch (serialrx_type) {
-
-        case SERIALRX_SPEKTRUM2048:
-            // 11 bit frames
-            spek_chan_shift = 3;
-            spek_chan_mask = 0x07;
-            spekHiRes = true;
-            numRCChannels = SPEK_2048_MAX_CHANNEL;
-            break;
-        case SERIALRX_SPEKTRUM1024:
-            // 10 bit frames
-            spek_chan_shift = 2;
-            spek_chan_mask = 0x03;
-            spekHiRes = false;
-            numRCChannels = SPEK_1024_MAX_CHANNEL;
-            break;
-    }
+    spek_chan_shift = cs;
+    spek_chan_mask = cm;
+    spekHiRes = hr;
+    numRCChannels = nc;
 
     Serial1.begin(115200);
 }
@@ -91,3 +77,14 @@ uint16_t SpektrumDSM::readRawRC(uint8_t chan)
 
     return data;
 }
+
+void SpektrumDSM1024::begin(void)
+{
+    SpektrumDSM::begin(2, 0x03, false, SPEK_1024_MAX_CHANNEL);
+}
+
+void SpektrumDSM2048::begin(void)
+{
+    SpektrumDSM::begin(3, 0x07, true, SPEK_2048_MAX_CHANNEL);
+}
+
