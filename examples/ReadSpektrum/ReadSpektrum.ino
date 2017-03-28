@@ -32,9 +32,11 @@ void setup() {
 void loop() {
 
     if (rx.frameComplete()) {
-        for (int k=0; k<5; ++k)
-            Serial.printf("%d ", rx.readRawRC(chanmap[k]));
-        Serial.printf("\n");
+        for (int k=0; k<5; ++k) {
+            Serial.print(rx.readRawRC(chanmap[k]));
+            Serial.print(" ");
+        }
+        Serial.println();
     }
 
     // Allow some time between readings
