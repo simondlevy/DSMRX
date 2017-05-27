@@ -38,9 +38,4 @@ void loop() {
         }
         Serial.println();
     }
-
-    // Allow some time between readings
-    delay(10);  
-
-    
 }
