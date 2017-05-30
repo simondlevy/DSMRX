@@ -18,4 +18,31 @@
    along with SpektrumDSM.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-void initRX();
+class SpektrumDSM {
+
+    protected:
+
+        SpektrumDSM(uint8_t rc, uint8_t cs, uint8_t cm, uint8_t vs);
+
+    public:
+
+        uint16_t getChannelValue(uint8_t chan);
+
+        void begin(void);
+};
+
+class SpektrumDSM1024 : public SpektrumDSM {
+
+    public:
+
+        SpektrumDSM1024(void);
+
+};
+
+class SpektrumDSM2048 : public SpektrumDSM {
+
+    public:
+
+        SpektrumDSM2048(void);
+};
+

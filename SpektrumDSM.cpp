@@ -21,63 +21,74 @@
 #include <Arduino.h>
 #include "SpektrumDSM.h"
 
-#define MIDRC 1500
-#define RX_BUFFER_SIZE (16)
-#define RC_CHANS (12)
-#define SPEK_FRAME_SIZE 16 
+#define BUFFER_SIZE  16
+#define MAX_CHANS    8
 
-//#define SPEK_CHAN_SHIFT  2       // Assumes 10 bit frames, that is 1024 mode.
-//#define SPEK_CHAN_MASK   0x03    // Assumes 10 bit frames, that is 1024 mode.
+// Modified by serialEvent1()
+static volatile uint8_t  rxBuf[BUFFER_SIZE];
+static volatile uint8_t  rxBufPos;
+static volatile uint16_t rcValue[MAX_CHANS];
 
-#define SPEK_CHAN_SHIFT  3       // Assumes 11 bit frames, that is 2048 mode.
-#define SPEK_CHAN_MASK   0x07    // Assumes 11 bit frames, that is 2048 mode.
+// For communicating between serialEvent1() and SpektrumDSM object
+static uint8_t _rc_chans;
+static uint8_t _chan_shift;
+static uint8_t _chan_mask;
+static uint8_t _val_shift;
 
-volatile uint8_t rxBuf[RX_BUFFER_SIZE];
-volatile uint8_t rxBufPos;
-volatile uint16_t rcValue[RC_CHANS] = {1000, MIDRC, MIDRC, MIDRC, MIDRC, MIDRC, MIDRC, MIDRC, MIDRC, MIDRC, MIDRC, MIDRC}; // throttle off
-
-
-void initRX() 
+void serialEvent1() 
 {
-    Serial1.begin(115200);  
-}
-
-// check for new frame, i.e. more than 2.5ms passed
-static uint32_t spekTimeLast;
-static void checkForNewFrame() 
-{
+    // check for new frame, i.e. more than 2.5ms passed
+    static uint32_t spekTimeLast;
     uint32_t spekTimeNow = micros();
     uint32_t spekInterval = spekTimeNow - spekTimeLast;
     spekTimeLast = spekTimeNow;
     if (spekInterval > 2500) {
         rxBufPos = 0;
     }
-}
 
-// parse raw serial data into channels
-static void parseRXData() 
-{
-    // convert to channel data in the 1000-2000 range
-    for (int b = 2; b < SPEK_FRAME_SIZE; b += 2) {
-        uint8_t bh = rxBuf[b];
-        uint8_t bl = rxBuf[b+1];
-        uint8_t spekChannel = 0x0F & (bh >> SPEK_CHAN_SHIFT);
-        if (spekChannel < RC_CHANS) {
-            rcValue[spekChannel] = ((((uint16_t)(bh & SPEK_CHAN_MASK) << 8) + bl) >> 1) + 988;
+    // put the data in buffer
+    while ((Serial1.available()) && (rxBufPos < BUFFER_SIZE)) {
+        rxBuf[rxBufPos++] = Serial1.read();
+    }
+
+    // parse frame if done
+    if (rxBufPos == BUFFER_SIZE) {
+
+        // convert to channel data in the 1000-2000 range
+        for (int b = 2; b < BUFFER_SIZE; b += 2) {
+            uint8_t bh = rxBuf[b];
+            uint8_t bl = rxBuf[b+1];
+            uint8_t spekChannel = 0x0F & (bh >> _chan_shift);
+            if (spekChannel < _rc_chans) {
+                rcValue[spekChannel] = ((((uint16_t)(bh & _chan_mask) << 8) + bl) >> _val_shift) + 988;
+            }
         }
     }
 }
 
-// RX interrupt
-void serialEvent1() 
+SpektrumDSM::SpektrumDSM(uint8_t rc, uint8_t cs, uint8_t cm, uint8_t vs)
 {
-    checkForNewFrame();
+    _rc_chans = rc;
+    _chan_shift = cs;
+    _chan_mask = cm;
+    _val_shift = vs;
+}
 
-    // put the data in buffer
-    while ((Serial1.available()) && (rxBufPos < RX_BUFFER_SIZE))
-        rxBuf[rxBufPos++] = (char)Serial1.read();
+void SpektrumDSM::begin(void)
+{
+    Serial1.begin(115200);
+}
 
-    // parse frame if done
-    if (rxBufPos == SPEK_FRAME_SIZE)
-        parseRXData();
+uint16_t SpektrumDSM::getChannelValue(uint8_t chan)
+{
+    return rcValue[chan];
+}
+
+
+SpektrumDSM1024::SpektrumDSM1024(void) : SpektrumDSM(7, 2, 0x03, 0)
+{
+}
+
+SpektrumDSM2048::SpektrumDSM2048(void) : SpektrumDSM(8, 3, 0x07, 1)
+{
 }
