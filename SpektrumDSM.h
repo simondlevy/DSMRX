@@ -9,6 +9,7 @@
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
+
    SpektrumDSM is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -17,35 +18,4 @@
    along with SpektrumDSM.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
-
-#include <stdint.h>
-
-class SpektrumDSM {
-
-    protected:
-
-        void begin(uint8_t cs, uint8_t cm, bool hr, uint8_t nc);
-
-    public:
-
-        bool frameComplete(void);
-
-        uint16_t readRawRC(uint8_t chan);
-};
-
-class SpektrumDSM2048 : public SpektrumDSM {
-
-    public:
-
-        void begin(void);
-};
-
-class SpektrumDSM1024 : public SpektrumDSM {
-
-    public:
-
-        void begin(void);
-};
-
-
+void initRX();
