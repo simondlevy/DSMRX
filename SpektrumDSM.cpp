@@ -36,7 +36,7 @@ static uint8_t _chan_mask;
 static uint8_t _val_shift;
 
 // Serial-event handler
-void SERIAL_EVENT()
+void DSM_SERIAL_EVENT()
 {
     // check for new frame, i.e. more than 2.5ms passed
     static uint32_t spekTimeLast;
@@ -48,8 +48,8 @@ void SERIAL_EVENT()
     }
 
     // put the data in buffer
-    while ((SERIAL.available()) && (rxBufPos < BUFFER_SIZE)) {
-        rxBuf[rxBufPos++] = SERIAL.read();
+    while ((DSM_SERIAL.available()) && (rxBufPos < BUFFER_SIZE)) {
+        rxBuf[rxBufPos++] = DSM_SERIAL.read();
     }
 
     // parse frame if done
@@ -77,7 +77,7 @@ SpektrumDSM::SpektrumDSM(uint8_t rc, uint8_t cs, uint8_t cm, uint8_t vs)
 
 void SpektrumDSM::begin(void)
 {
-    SERIAL.begin(115200);
+    DSM_SERIAL.begin(115200);
 }
 
 uint16_t SpektrumDSM::getChannelValue(uint8_t chan)

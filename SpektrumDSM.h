@@ -19,8 +19,8 @@
  */
 
 // Change these as needed for your hardware
-#define SERIAL_EVENT serialEvent1
-#define SERIAL       Serial1
+#define DSM_SERIAL_EVENT serialEvent1
+#define DSM_SERIAL       Serial1
 
 class SpektrumDSM {
 
