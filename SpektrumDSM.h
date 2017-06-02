@@ -18,6 +18,10 @@
    along with SpektrumDSM.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// Change these as needed for your hardware
+#define SERIAL_EVENT serialEvent1
+#define SERIAL       Serial1
+
 class SpektrumDSM {
 
     protected:

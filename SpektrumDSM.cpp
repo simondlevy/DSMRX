@@ -24,18 +24,19 @@
 #define BUFFER_SIZE  16
 #define MAX_CHANS    8
 
-// Modified by serialEvent1()
+// Modified by serial-event handler
 static volatile uint8_t  rxBuf[BUFFER_SIZE];
 static volatile uint8_t  rxBufPos;
 static volatile uint16_t rcValue[MAX_CHANS];
 
-// For communicating between serialEvent1() and SpektrumDSM object
+// For communicating between serial-event handler and SpektrumDSM object
 static uint8_t _rc_chans;
 static uint8_t _chan_shift;
 static uint8_t _chan_mask;
 static uint8_t _val_shift;
 
-void serialEvent1() 
+// Serial-event handler
+void SERIAL_EVENT()
 {
     // check for new frame, i.e. more than 2.5ms passed
     static uint32_t spekTimeLast;
@@ -47,8 +48,8 @@ void serialEvent1()
     }
 
     // put the data in buffer
-    while ((Serial1.available()) && (rxBufPos < BUFFER_SIZE)) {
-        rxBuf[rxBufPos++] = Serial1.read();
+    while ((SERIAL.available()) && (rxBufPos < BUFFER_SIZE)) {
+        rxBuf[rxBufPos++] = SERIAL.read();
     }
 
     // parse frame if done
@@ -76,7 +77,7 @@ SpektrumDSM::SpektrumDSM(uint8_t rc, uint8_t cs, uint8_t cm, uint8_t vs)
 
 void SpektrumDSM::begin(void)
 {
-    Serial1.begin(115200);
+    SERIAL.begin(115200);
 }
 
 uint16_t SpektrumDSM::getChannelValue(uint8_t chan)
