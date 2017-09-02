@@ -1,4 +1,4 @@
-<img src="lemonrx.png">
+<img src="lemonrx.png" width=300>
 
 This little Arduino libary allows you to access the signals on a Spektrum DSM
 serial receiver using an Arduino.  It uses interrupts, rather than polling. The
