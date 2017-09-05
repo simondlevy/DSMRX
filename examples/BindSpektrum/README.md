@@ -12,4 +12,7 @@ Uno or Mega to use this sketch.
 To select the protocol for your receiver simply comment/uncomment the appropriate <b>SPEK_BIND_PULSES</b>
 constant definition at the 
 [top of the program](https://github.com/simondlevy/SpektrumDSM/blob/master/examples/BindSpektrum/BindSpektrum.ino#L27-L31).
-
+Then connect the receiver to the Arduino as shown (receiver power to digital pin 5; receiver ground to digital 4;
+receiver signal to digital 0) and flash the sketch.  The receiver LED will blink rapidly, indicating that it is in
+binding mode.  Power up your transmitter in binding mode (e.g., by holding the bind button down on a Spektrum DX8).
+The transmitter should report the appropriate signal type (DSMX or DSM2), and the receiver LED should go solid red.
