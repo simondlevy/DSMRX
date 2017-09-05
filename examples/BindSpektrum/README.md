@@ -1,6 +1,6 @@
 # Binding your Spektrum satellite receiver with an Arduino
 
-<img src="image.png" width=500>
+<img src="image.jpg" width=500>
 
 This standalone Arduino sketch has been adapted from David McGriffy's
 <a href="http://www.makedronesbook.com/sites/makedronesbook.com/files/spekbind.ino_.zip">spekbind</a>
