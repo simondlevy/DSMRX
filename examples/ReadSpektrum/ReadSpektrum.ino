@@ -31,10 +31,8 @@ void setup(void)
 
 void loop(void)
 {
-    uint8_t chanmap[5] = {1, 2, 3, 0, 5};
-
     for (int k=0; k<5; ++k) {
-        Serial.print(rx.getChannelValue(chanmap[k]));
+        Serial.print(rx.getChannelValue(k));
         Serial.print(" ");
     }
     Serial.println();
