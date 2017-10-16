@@ -32,6 +32,8 @@ class SpektrumDSM {
 
         uint16_t getChannelValue(uint8_t chan);
 
+        uint8_t getFadeCount(void);
+
         void begin(void);
 };
 

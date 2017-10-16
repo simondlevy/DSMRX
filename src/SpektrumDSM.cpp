@@ -34,6 +34,7 @@ static uint8_t _rc_chans;
 static uint8_t _chan_shift;
 static uint8_t _chan_mask;
 static uint8_t _val_shift;
+static uint8_t _fade_count;
 
 // Serial-event handler
 void DSM_SERIAL_EVENT()
@@ -54,6 +55,9 @@ void DSM_SERIAL_EVENT()
 
     // parse frame if done
     if (rxBufPos == BUFFER_SIZE) {
+
+        // grab fade count
+        _fade_count = rxBuf[0];
 
         // convert to channel data in the 1000-2000 range
         for (int b = 2; b < BUFFER_SIZE; b += 2) {
@@ -85,6 +89,10 @@ uint16_t SpektrumDSM::getChannelValue(uint8_t chan)
     return rcValue[chan];
 }
 
+uint8_t SpektrumDSM::getFadeCount(void)
+{
+    return _fade_count;
+}
 
 SpektrumDSM1024::SpektrumDSM1024(void) : SpektrumDSM(7, 2, 0x03, 0)
 {

@@ -32,10 +32,15 @@ void setup(void)
 void loop(void)
 {
     for (int k=0; k<5; ++k) {
+        Serial.print("Ch. ");
+        Serial.print(k+1);
+        Serial.print(": ");
         Serial.print(rx.getChannelValue(k));
-        Serial.print(" ");
+        Serial.print("    ");
     }
-    Serial.println();
+
+    Serial.print("Fade count = ");
+    Serial.println(rx.getFadeCount());
 
     delay(10);
 }
