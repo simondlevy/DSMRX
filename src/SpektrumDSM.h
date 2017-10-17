@@ -35,6 +35,8 @@ class SpektrumDSM {
         uint8_t getFadeCount(void);
 
         void begin(void);
+
+        bool timedOut(uint32_t maxMicros=20000);
 };
 
 class SpektrumDSM1024 : public SpektrumDSM {

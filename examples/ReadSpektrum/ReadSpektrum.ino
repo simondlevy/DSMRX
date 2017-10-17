@@ -31,16 +31,23 @@ void setup(void)
 
 void loop(void)
 {
-    for (int k=0; k<8; ++k) {
-        Serial.print("Ch. ");
-        Serial.print(k+1);
-        Serial.print(": ");
-        Serial.print(rx.getChannelValue(k));
-        Serial.print("    ");
+    if (rx.timedOut()) {
+        Serial.println("*** TIMED OUT ***");
     }
 
-    Serial.print("Fade count = ");
-    Serial.println(rx.getFadeCount());
+    else {
+
+        for (int k=0; k<8; ++k) {
+            Serial.print("Ch. ");
+            Serial.print(k+1);
+            Serial.print(": ");
+            Serial.print(rx.getChannelValue(k));
+            Serial.print("    ");
+        }
+
+        Serial.print("Fade count = ");
+        Serial.println(rx.getFadeCount());
+    }
 
     delay(10);
 }

@@ -28,6 +28,7 @@
 static volatile uint8_t  rxBuf[BUFFER_SIZE];
 static volatile uint8_t  rxBufPos;
 static volatile uint16_t rcValue[MAX_CHANS];
+static volatile uint32_t lastInterruptMicros;
 
 // For communicating between serial-event handler and SpektrumDSM object
 static uint8_t _rc_chans;
@@ -39,6 +40,9 @@ static uint8_t _fade_count;
 // Serial-event handler
 void DSM_SERIAL_EVENT()
 {
+    // Reset time 
+    lastInterruptMicros = micros();
+
     // check for new frame, i.e. more than 2.5ms passed
     static uint32_t spekTimeLast;
     uint32_t spekTimeNow = micros();
@@ -92,6 +96,12 @@ uint16_t SpektrumDSM::getChannelValue(uint8_t chan)
 uint8_t SpektrumDSM::getFadeCount(void)
 {
     return _fade_count;
+}
+
+bool SpektrumDSM::timedOut(uint32_t maxMicros)
+{
+    
+    return (micros()-lastInterruptMicros) > maxMicros;
 }
 
 SpektrumDSM1024::SpektrumDSM1024(void) : SpektrumDSM(7, 2, 0x03, 0)
