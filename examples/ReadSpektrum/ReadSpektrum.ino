@@ -31,7 +31,7 @@ void setup(void)
 
 void loop(void)
 {
-    for (int k=0; k<5; ++k) {
+    for (int k=0; k<8; ++k) {
         Serial.print("Ch. ");
         Serial.print(k+1);
         Serial.print(": ");
