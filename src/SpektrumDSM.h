@@ -30,13 +30,21 @@ class SpektrumDSM {
 
     public:
 
+        /**
+          * Returns channel value in [1000,2000] interval
+          */
         uint16_t getChannelValue(uint8_t chan);
 
-        uint8_t getFadeCount(void);
+        /**
+          * Returns channel value in [-1,+1] interval
+          */
+        float    getChannelValueNormalized(uint8_t chan);
 
-        void begin(void);
+        uint8_t  getFadeCount(void);
 
-        bool timedOut(uint32_t maxMicros=20000);
+        void     begin(void);
+
+        bool     timedOut(uint32_t maxMicros=20000);
 };
 
 class SpektrumDSM1024 : public SpektrumDSM {

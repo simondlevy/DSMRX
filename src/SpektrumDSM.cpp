@@ -63,13 +63,13 @@ void DSM_SERIAL_EVENT()
         // grab fade count
         _fade_count = rxBuf[0];
 
-        // convert to channel data in the 1000-2000 range
+        // convert to channel data in [0,1024]
         for (int b = 2; b < BUFFER_SIZE; b += 2) {
             uint8_t bh = rxBuf[b];
             uint8_t bl = rxBuf[b+1];
             uint8_t spekChannel = 0x0F & (bh >> _chan_shift);
             if (spekChannel < _rc_chans) {
-                rcValue[spekChannel] = ((((uint16_t)(bh & _chan_mask) << 8) + bl) >> _val_shift) + 988;
+                rcValue[spekChannel] = ((((uint16_t)(bh & _chan_mask) << 8) + bl) >> _val_shift);
             }
         }
     }
@@ -90,7 +90,12 @@ void SpektrumDSM::begin(void)
 
 uint16_t SpektrumDSM::getChannelValue(uint8_t chan)
 {
-    return rcValue[chan];
+    return rcValue[chan] + 988;
+}
+
+float SpektrumDSM::getChannelValueNormalized(uint8_t chan)
+{
+    return (rcValue[chan] - 512) / 512.f;
 }
 
 uint8_t SpektrumDSM::getFadeCount(void)
