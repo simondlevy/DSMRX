@@ -1,7 +1,7 @@
 /*
-   ReadSpektrum.ino : demo sketch for SpektrumDSM library
+   ReadSpektrumNormalized.ino : demo sketch for SpektrumDSM library
 
-   Displays channel values in interval [1000, 2000]
+   Displays channel values in interval [-1,+1]
 
    Copyright (C) Simon D. Levy 2017
 
@@ -43,7 +43,11 @@ void loop(void)
             Serial.print("Ch. ");
             Serial.print(k+1);
             Serial.print(": ");
-            Serial.print(rx.getChannelValue(k));
+            float value = rx.getChannelValueNormalized(k); 
+            if (value > 0) {
+                Serial.print("+");
+            }
+            Serial.print(value);
             Serial.print("    ");
         }
 
