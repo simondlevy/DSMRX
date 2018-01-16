@@ -44,7 +44,7 @@ class SpektrumDSM {
 
         void     begin(void);
 
-        bool     timedOut(uint32_t maxMicros=20000);
+        bool     timedOut(uint32_t maxMicros=40000);
 };
 
 class SpektrumDSM1024 : public SpektrumDSM {
