@@ -86,6 +86,7 @@ SpektrumDSM::SpektrumDSM(uint8_t rc, uint8_t cs, uint8_t cm, uint8_t vs)
 void SpektrumDSM::begin(void)
 {
     DSM_SERIAL.begin(115200);
+    lastInterruptMicros = micros();
 }
 
 uint16_t SpektrumDSM::getChannelValue(uint8_t chan)
@@ -106,7 +107,8 @@ uint8_t SpektrumDSM::getFadeCount(void)
 bool SpektrumDSM::timedOut(uint32_t maxMicros)
 {
     
-    return (micros()-lastInterruptMicros) > maxMicros;
+    uint32_t lag = micros()-lastInterruptMicros;
+    return  lag > maxMicros;
 }
 
 SpektrumDSM1024::SpektrumDSM1024(void) : SpektrumDSM(7, 2, 0x03, 0)
