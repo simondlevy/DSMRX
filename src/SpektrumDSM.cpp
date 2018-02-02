@@ -89,14 +89,18 @@ void SpektrumDSM::begin(void)
     lastInterruptMicros = micros();
 }
 
-uint16_t SpektrumDSM::getChannelValue(uint8_t chan)
+void SpektrumDSM::getChannelValues(uint16_t values[], uint8_t count)
 {
-    return rcValue[chan] + 988;
+    for (uint8_t k=0; k<count; ++k) {
+        values[k] = rcValue[k] + 988;
+    }
 }
 
-float SpektrumDSM::getChannelValueNormalized(uint8_t chan)
+void SpektrumDSM::getChannelValuesNormalized(float values[], uint8_t count)
 {
-    return (rcValue[chan] - 512) / 512.f;
+    for (uint8_t k=0; k<count; ++k) {
+        values[k] = (rcValue[k] - 512) / 512.f;
+    }
 }
 
 uint8_t SpektrumDSM::getFadeCount(void)

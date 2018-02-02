@@ -22,6 +22,8 @@
 
 #include <SpektrumDSM.h>
 
+static const uint8_t CHANNELS = 5;
+
 SpektrumDSM2048 rx;
 
 void setup(void)
@@ -39,11 +41,15 @@ void loop(void)
 
     else {
 
-        for (int k=0; k<8; ++k) {
+        uint16_t values[CHANNELS];
+
+        rx.getChannelValues(values, CHANNELS);
+
+        for (int k=0; k<CHANNELS; ++k) {
             Serial.print("Ch. ");
             Serial.print(k+1);
             Serial.print(": ");
-            Serial.print(rx.getChannelValue(k));
+            values[k];
             Serial.print("    ");
         }
 
