@@ -30,6 +30,10 @@ class SpektrumDSM {
 
     public:
 
+        void begin(void);
+
+        bool gotNewFrame(void);
+
         /**
           * Returns channel values in [1000,2000] interval
           */
@@ -41,8 +45,6 @@ class SpektrumDSM {
         void    getChannelValuesNormalized(float values[], uint8_t count=8);
 
         uint8_t getFadeCount(void);
-
-        void    begin(void);
 
         bool    timedOut(uint32_t maxMicros=40000);
 };

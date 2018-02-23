@@ -39,7 +39,7 @@ void loop(void)
         Serial.println("*** TIMED OUT ***");
     }
 
-    else {
+    else if (rx.gotNewFrame()) {
 
         float values[CHANNELS];
 
@@ -49,13 +49,11 @@ void loop(void)
             Serial.print("Ch. ");
             Serial.print(k+1);
             Serial.print(": ");
-            values[k];
+            Serial.print(values[k]);
             Serial.print("    ");
         }
 
         Serial.print("Fade count = ");
         Serial.println(rx.getFadeCount());
     }
-
-    delay(10);
 }

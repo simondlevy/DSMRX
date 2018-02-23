@@ -36,6 +36,7 @@ static uint8_t _chan_shift;
 static uint8_t _chan_mask;
 static uint8_t _val_shift;
 static uint8_t _fade_count;
+static bool _got_new_frame;
 
 // Serial-event handler
 void DSM_SERIAL_EVENT()
@@ -72,6 +73,9 @@ void DSM_SERIAL_EVENT()
                 rcValue[spekChannel] = ((((uint16_t)(bh & _chan_mask) << 8) + bl) >> _val_shift);
             }
         }
+
+        // we have a new frame
+        _got_new_frame = true;
     }
 }
 
@@ -85,8 +89,19 @@ SpektrumDSM::SpektrumDSM(uint8_t rc, uint8_t cs, uint8_t cm, uint8_t vs)
 
 void SpektrumDSM::begin(void)
 {
+    _got_new_frame = false;
     DSM_SERIAL.begin(115200);
     lastInterruptMicros = micros();
+}
+
+bool SpektrumDSM::gotNewFrame(void)
+{
+    bool retval = _got_new_frame;
+    if (_got_new_frame) {
+        _got_new_frame = false;
+        delay(5);
+    }
+    return retval;
 }
 
 void SpektrumDSM::getChannelValues(uint16_t values[], uint8_t count)
