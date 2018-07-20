@@ -22,7 +22,7 @@
 
 #include <SpektrumDSM.h>
 
-static const uint8_t CHANNELS = 5;
+static const uint8_t CHANNELS = 8;
 
 SpektrumDSM2048 rx;
 
