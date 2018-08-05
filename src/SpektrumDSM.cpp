@@ -94,6 +94,47 @@ void SpektrumDSM::begin(void)
     lastInterruptMicros = micros();
 }
 
+void SpektrumDSM::handleSerialEvent(void)
+{
+    // Reset time 
+    _lastInterruptMicros = micros();
+
+    // check for new frame, i.e. more than 2.5ms passed
+    static uint32_t spekTimeLast;
+    uint32_t spekTimeNow = micros();
+    uint32_t spekInterval = spekTimeNow - spekTimeLast;
+    spekTimeLast = spekTimeNow;
+    if (spekInterval > 2500) {
+        rxBufPos = 0;
+    }
+
+    // put the data in buffer
+    while ((DSM_SERIAL.available()) && (rxBufPos < BUFFER_SIZE)) {
+        rxBuf[rxBufPos++] = DSM_SERIAL.read();
+    }
+
+    // parse frame if done
+    if (rxBufPos == BUFFER_SIZE) {
+
+        // grab fade count
+        _fade_count = rxBuf[0];
+
+        // convert to channel data in [0,1024]
+        for (int b = 2; b < BUFFER_SIZE; b += 2) {
+            uint8_t bh = rxBuf[b];
+            uint8_t bl = rxBuf[b+1];
+            uint8_t spekChannel = 0x0F & (bh >> _chan_shift);
+            if (spekChannel < _rc_chans) {
+                rcValue[spekChannel] = ((((uint16_t)(bh & _chan_mask) << 8) + bl) >> _val_shift);
+            }
+        }
+
+        // we have a new frame
+        _got_new_frame = true;
+    }
+}
+
+
 bool SpektrumDSM::gotNewFrame(void)
 {
     bool retval = _got_new_frame;

@@ -24,6 +24,17 @@
 
 class SpektrumDSM {
 
+    private:
+
+        static const uint8_t BUFFER_SIZE  = 16;
+        static const uint8_t MAX_CHANS    = 8;
+
+        // Modified by serial-event handler
+        volatile uint8_t  _rxBuf[BUFFER_SIZE];
+        volatile uint8_t  _rxBufPos;
+        volatile uint16_t _rcValue[MAX_CHANS];
+        volatile uint32_t _lastInterruptMicros;
+
     protected:
 
         SpektrumDSM(uint8_t rc, uint8_t cs, uint8_t cm, uint8_t vs);
@@ -32,16 +43,18 @@ class SpektrumDSM {
 
         void begin(void);
 
+        void handleSerialEvent(void);
+
         bool gotNewFrame(void);
 
         /**
-          * Returns channel values in [1000,2000] interval
-          */
+         * Returns channel values in [1000,2000] interval
+         */
         void    getChannelValues(uint16_t values[], uint8_t count=8);
 
         /**
-          * Returns channel values in [-1,+1] interval
-          */
+         * Returns channel values in [-1,+1] interval
+         */
         void    getChannelValuesNormalized(float values[], uint8_t count=8);
 
         uint8_t getFadeCount(void);
