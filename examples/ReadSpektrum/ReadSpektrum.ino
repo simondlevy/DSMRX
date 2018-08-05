@@ -26,11 +26,26 @@ static const uint8_t CHANNELS = 8;
 
 SpektrumDSM2048 rx;
 
+void serialEvent1(void)
+{
+    rx.handleSerialEvent(micros());
+}
+
+int serialAvailable(void)
+{
+    return Serial1.available();
+}
+
+uint8_t serialRead(void)
+{
+    return Serial1.read();
+}
+
 void setup(void)
 {
-    rx.begin();
-
     Serial.begin(115000);
+
+    Serial1.begin(115000);
 }
 
 void loop(void)

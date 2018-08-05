@@ -21,125 +21,63 @@
 #include <Arduino.h>
 #include "SpektrumDSM.h"
 
-#define BUFFER_SIZE  16
-#define MAX_CHANS    8
+SpektrumDSM::SpektrumDSM(uint8_t rcChans, uint8_t chanShift, uint8_t chanMask, uint8_t valShift)
+{
+    _rcChans = rcChans;
+    _chanShift = chanShift;
+    _chanMask = chanMask;
+    _valShift = valShift;
 
-// Modified by serial-event handler
-static volatile uint8_t  rxBuf[BUFFER_SIZE];
-static volatile uint8_t  rxBufPos;
-static volatile uint16_t rcValue[MAX_CHANS];
-static volatile uint32_t lastInterruptMicros;
+    _gotNewFrame = false;
+    _lastInterruptMicros = 0;
+}
 
-// For communicating between serial-event handler and SpektrumDSM object
-static uint8_t _rc_chans;
-static uint8_t _chan_shift;
-static uint8_t _chan_mask;
-static uint8_t _val_shift;
-static uint8_t _fade_count;
-static bool _got_new_frame;
-
-// Serial-event handler
-void DSM_SERIAL_EVENT()
+void SpektrumDSM::handleSerialEvent(uint32_t usec)
 {
     // Reset time 
-    lastInterruptMicros = micros();
+    _lastInterruptMicros = usec;
 
     // check for new frame, i.e. more than 2.5ms passed
     static uint32_t spekTimeLast;
-    uint32_t spekTimeNow = micros();
+    uint32_t spekTimeNow = usec;
     uint32_t spekInterval = spekTimeNow - spekTimeLast;
     spekTimeLast = spekTimeNow;
     if (spekInterval > 2500) {
-        rxBufPos = 0;
+        _rxBufPos = 0;
     }
 
     // put the data in buffer
-    while ((DSM_SERIAL.available()) && (rxBufPos < BUFFER_SIZE)) {
-        rxBuf[rxBufPos++] = DSM_SERIAL.read();
+    while ((serialAvailable()) && (_rxBufPos < BUFFER_SIZE)) {
+        _rxBuf[_rxBufPos++] = serialRead();
     }
 
     // parse frame if done
-    if (rxBufPos == BUFFER_SIZE) {
+    if (_rxBufPos == BUFFER_SIZE) {
 
         // grab fade count
-        _fade_count = rxBuf[0];
+        _fadeCount = _rxBuf[0];
 
         // convert to channel data in [0,1024]
         for (int b = 2; b < BUFFER_SIZE; b += 2) {
-            uint8_t bh = rxBuf[b];
-            uint8_t bl = rxBuf[b+1];
-            uint8_t spekChannel = 0x0F & (bh >> _chan_shift);
-            if (spekChannel < _rc_chans) {
-                rcValue[spekChannel] = ((((uint16_t)(bh & _chan_mask) << 8) + bl) >> _val_shift);
+            uint8_t bh = _rxBuf[b];
+            uint8_t bl = _rxBuf[b+1];
+            uint8_t spekChannel = 0x0F & (bh >> _chanShift);
+            if (spekChannel < _rcChans) {
+                _rcValue[spekChannel] = ((((uint16_t)(bh & _chanMask) << 8) + bl) >> _valShift);
             }
         }
 
         // we have a new frame
-        _got_new_frame = true;
-    }
-}
-
-SpektrumDSM::SpektrumDSM(uint8_t rc, uint8_t cs, uint8_t cm, uint8_t vs)
-{
-    _rc_chans = rc;
-    _chan_shift = cs;
-    _chan_mask = cm;
-    _val_shift = vs;
-}
-
-void SpektrumDSM::begin(void)
-{
-    _got_new_frame = false;
-    DSM_SERIAL.begin(115200);
-    lastInterruptMicros = micros();
-}
-
-void SpektrumDSM::handleSerialEvent(void)
-{
-    // Reset time 
-    _lastInterruptMicros = micros();
-
-    // check for new frame, i.e. more than 2.5ms passed
-    static uint32_t spekTimeLast;
-    uint32_t spekTimeNow = micros();
-    uint32_t spekInterval = spekTimeNow - spekTimeLast;
-    spekTimeLast = spekTimeNow;
-    if (spekInterval > 2500) {
-        rxBufPos = 0;
-    }
-
-    // put the data in buffer
-    while ((DSM_SERIAL.available()) && (rxBufPos < BUFFER_SIZE)) {
-        rxBuf[rxBufPos++] = DSM_SERIAL.read();
-    }
-
-    // parse frame if done
-    if (rxBufPos == BUFFER_SIZE) {
-
-        // grab fade count
-        _fade_count = rxBuf[0];
-
-        // convert to channel data in [0,1024]
-        for (int b = 2; b < BUFFER_SIZE; b += 2) {
-            uint8_t bh = rxBuf[b];
-            uint8_t bl = rxBuf[b+1];
-            uint8_t spekChannel = 0x0F & (bh >> _chan_shift);
-            if (spekChannel < _rc_chans) {
-                rcValue[spekChannel] = ((((uint16_t)(bh & _chan_mask) << 8) + bl) >> _val_shift);
-            }
-        }
-
-        // we have a new frame
-        _got_new_frame = true;
+        _gotNewFrame = true;
     }
 }
 
 
 bool SpektrumDSM::gotNewFrame(void)
 {
-    bool retval = _got_new_frame;
-    if (_got_new_frame) {
-        _got_new_frame = false;
+    bool retval = _gotNewFrame;
+    if (_gotNewFrame) {
+        _gotNewFrame = false;
         delay(5);
     }
     return retval;
@@ -148,26 +86,26 @@ bool SpektrumDSM::gotNewFrame(void)
 void SpektrumDSM::getChannelValues(uint16_t values[], uint8_t count)
 {
     for (uint8_t k=0; k<count; ++k) {
-        values[k] = rcValue[k] + 988;
+        values[k] = _rcValue[k] + 988;
     }
 }
 
 void SpektrumDSM::getChannelValuesNormalized(float values[], uint8_t count)
 {
     for (uint8_t k=0; k<count; ++k) {
-        values[k] = (rcValue[k] - 512) / 512.f;
+        values[k] = (_rcValue[k] - 512) / 512.f;
     }
 }
 
 uint8_t SpektrumDSM::getFadeCount(void)
 {
-    return _fade_count;
+    return _fadeCount;
 }
 
 bool SpektrumDSM::timedOut(uint32_t maxMicros)
 {
     
-    uint32_t lag = micros()-lastInterruptMicros;
+    uint32_t lag = micros()-_lastInterruptMicros;
     return  lag > maxMicros;
 }
 

@@ -18,9 +18,9 @@
    along with SpektrumDSM.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Change these as needed for your hardware
-#define DSM_SERIAL_EVENT serialEvent1
-#define DSM_SERIAL       Serial1
+// Your application should implement these functions
+extern int serialAvailable(void);
+extern uint8_t serialRead(void);
 
 class SpektrumDSM {
 
@@ -35,15 +35,21 @@ class SpektrumDSM {
         volatile uint16_t _rcValue[MAX_CHANS];
         volatile uint32_t _lastInterruptMicros;
 
+        uint8_t _rcChans;
+        uint8_t _chanShift;
+        uint8_t _chanMask;
+        uint8_t _valShift;
+        uint8_t _fadeCount;
+
+        bool _gotNewFrame;
+
     protected:
 
         SpektrumDSM(uint8_t rc, uint8_t cs, uint8_t cm, uint8_t vs);
 
     public:
 
-        void begin(void);
-
-        void handleSerialEvent(void);
+        void handleSerialEvent(uint32_t usec);
 
         bool gotNewFrame(void);
 
