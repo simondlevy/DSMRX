@@ -29,8 +29,6 @@ SpektrumDSM::SpektrumDSM(uint8_t rcChans, uint8_t chanShift, uint8_t chanMask, u
 
     _gotNewFrame = false;
     _lastInterruptMicros = 0;
-
-    _foo = false;
 }
 
 void SpektrumDSM::handleSerialEvent(uint32_t usec)
@@ -49,7 +47,6 @@ void SpektrumDSM::handleSerialEvent(uint32_t usec)
 
     // put the data in buffer
     while ((serialAvailable()) && (_rxBufPos < BUFFER_SIZE)) {
-        _foo = true;
         _rxBuf[_rxBufPos++] = serialRead();
     }
 

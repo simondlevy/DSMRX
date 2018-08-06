@@ -28,8 +28,7 @@ extern uint8_t serialRead(void);
 
 class SpektrumDSM {
 
-    //private:
-    public:
+    private:
 
         static const uint8_t BUFFER_SIZE  = 16;
         static const uint8_t MAX_CHANS    = 8;
@@ -47,8 +46,6 @@ class SpektrumDSM {
         uint8_t _fadeCount;
 
         bool _gotNewFrame;
-
-        bool _foo;
 
     protected:
 
