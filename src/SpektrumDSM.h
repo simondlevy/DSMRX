@@ -23,8 +23,8 @@
 #include <stdint.h>
 
 // Your application should implement these functions
-extern int serialAvailable(void);
-extern uint8_t serialRead(void);
+extern uint8_t dsmSerialAvailable(void);
+extern uint8_t dsmSerialRead(void);
 
 class SpektrumDSM {
 

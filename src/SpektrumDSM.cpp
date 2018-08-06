@@ -46,8 +46,8 @@ void SpektrumDSM::handleSerialEvent(uint32_t usec)
     }
 
     // put the data in buffer
-    while ((serialAvailable()) && (_rxBufPos < BUFFER_SIZE)) {
-        _rxBuf[_rxBufPos++] = serialRead();
+    while ((dsmSerialAvailable()) && (_rxBufPos < BUFFER_SIZE)) {
+        _rxBuf[_rxBufPos++] = dsmSerialRead();
     }
 
     // parse frame if done
