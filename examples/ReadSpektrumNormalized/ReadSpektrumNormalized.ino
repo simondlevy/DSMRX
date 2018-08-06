@@ -51,7 +51,7 @@ void setup(void)
 
 void loop(void)
 {
-    if (rx.timedOut()) {
+    if (rx.timedOut(micros())) {
         Serial.println("*** TIMED OUT ***");
     }
 
@@ -72,4 +72,7 @@ void loop(void)
         Serial.print("Fade count = ");
         Serial.println(rx.getFadeCount());
     }
+
+    // Need a little loop delay
+    delay(5);
 }

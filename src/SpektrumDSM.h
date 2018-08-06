@@ -18,13 +18,18 @@
    along with SpektrumDSM.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#pragma once
+
+#include <stdint.h>
+
 // Your application should implement these functions
 extern int serialAvailable(void);
 extern uint8_t serialRead(void);
 
 class SpektrumDSM {
 
-    private:
+    //private:
+    public:
 
         static const uint8_t BUFFER_SIZE  = 16;
         static const uint8_t MAX_CHANS    = 8;
@@ -42,6 +47,8 @@ class SpektrumDSM {
         uint8_t _fadeCount;
 
         bool _gotNewFrame;
+
+        bool _foo;
 
     protected:
 
@@ -65,7 +72,7 @@ class SpektrumDSM {
 
         uint8_t getFadeCount(void);
 
-        bool    timedOut(uint32_t maxMicros=40000);
+        bool    timedOut(uint32_t usec, uint32_t maxMicros=40000);
 };
 
 class SpektrumDSM1024 : public SpektrumDSM {

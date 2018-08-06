@@ -18,7 +18,6 @@
    along with SpektrumDSM.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Arduino.h>
 #include "SpektrumDSM.h"
 
 SpektrumDSM::SpektrumDSM(uint8_t rcChans, uint8_t chanShift, uint8_t chanMask, uint8_t valShift)
@@ -30,6 +29,8 @@ SpektrumDSM::SpektrumDSM(uint8_t rcChans, uint8_t chanShift, uint8_t chanMask, u
 
     _gotNewFrame = false;
     _lastInterruptMicros = 0;
+
+    _foo = false;
 }
 
 void SpektrumDSM::handleSerialEvent(uint32_t usec)
@@ -48,6 +49,7 @@ void SpektrumDSM::handleSerialEvent(uint32_t usec)
 
     // put the data in buffer
     while ((serialAvailable()) && (_rxBufPos < BUFFER_SIZE)) {
+        _foo = true;
         _rxBuf[_rxBufPos++] = serialRead();
     }
 
@@ -78,7 +80,6 @@ bool SpektrumDSM::gotNewFrame(void)
     bool retval = _gotNewFrame;
     if (_gotNewFrame) {
         _gotNewFrame = false;
-        delay(5);
     }
     return retval;
 }
@@ -102,10 +103,10 @@ uint8_t SpektrumDSM::getFadeCount(void)
     return _fadeCount;
 }
 
-bool SpektrumDSM::timedOut(uint32_t maxMicros)
+bool SpektrumDSM::timedOut(uint32_t usec, uint32_t maxMicros)
 {
     
-    uint32_t lag = micros()-_lastInterruptMicros;
+    uint32_t lag = usec - _lastInterruptMicros;
     return  lag > maxMicros;
 }
 
