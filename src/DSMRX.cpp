@@ -1,26 +1,26 @@
 /*
-   SpektrumDSM.cpp : implementation of interrupt-based Spektrum DSM receiver for Arduino
+   DSMRX.cpp : implementation of interrupt-based Spektrum DSM receiver for Arduino
 
    Copyright (C) Simon D. Levy 2017
 
-   This file is part of SpektrumDSM.
+   This file is part of DSMRX.
 
-   SpektrumDSM is free software: you can redistribute it and/or modify
+   DSMRX is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
-   SpektrumDSM is distributed in the hope that it will be useful,
+   DSMRX is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
    You should have received a copy of the GNU General Public License
-   along with SpektrumDSM.  If not, see <http://www.gnu.org/licenses/>.
+   along with DSMRX.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "SpektrumDSM.h"
+#include "DSMRX.h"
 
-SpektrumDSM::SpektrumDSM(uint8_t rcChans, uint8_t chanShift, uint8_t chanMask, uint8_t valShift)
+DSMRX::DSMRX(uint8_t rcChans, uint8_t chanShift, uint8_t chanMask, uint8_t valShift)
 {
     _rcChans = rcChans;
     _chanShift = chanShift;
@@ -31,7 +31,7 @@ SpektrumDSM::SpektrumDSM(uint8_t rcChans, uint8_t chanShift, uint8_t chanMask, u
     _lastInterruptMicros = 0;
 }
 
-void SpektrumDSM::handleSerialEvent(uint32_t usec)
+void DSMRX::handleSerialEvent(uint32_t usec)
 {
     // Reset time 
     _lastInterruptMicros = usec;
@@ -72,7 +72,7 @@ void SpektrumDSM::handleSerialEvent(uint32_t usec)
 }
 
 
-bool SpektrumDSM::gotNewFrame(void)
+bool DSMRX::gotNewFrame(void)
 {
     bool retval = _gotNewFrame;
     if (_gotNewFrame) {
@@ -81,36 +81,36 @@ bool SpektrumDSM::gotNewFrame(void)
     return retval;
 }
 
-void SpektrumDSM::getChannelValues(uint16_t values[], uint8_t count)
+void DSMRX::getChannelValues(uint16_t values[], uint8_t count)
 {
     for (uint8_t k=0; k<count; ++k) {
         values[k] = _rcValue[k] + 988;
     }
 }
 
-void SpektrumDSM::getChannelValuesNormalized(float values[], uint8_t count)
+void DSMRX::getChannelValuesNormalized(float values[], uint8_t count)
 {
     for (uint8_t k=0; k<count; ++k) {
         values[k] = (_rcValue[k] - 512) / 512.f;
     }
 }
 
-uint8_t SpektrumDSM::getFadeCount(void)
+uint8_t DSMRX::getFadeCount(void)
 {
     return _fadeCount;
 }
 
-bool SpektrumDSM::timedOut(uint32_t usec, uint32_t maxMicros)
+bool DSMRX::timedOut(uint32_t usec, uint32_t maxMicros)
 {
     
     uint32_t lag = usec - _lastInterruptMicros;
     return  lag > maxMicros;
 }
 
-SpektrumDSM1024::SpektrumDSM1024(void) : SpektrumDSM(7, 2, 0x03, 0)
+DSM1024::DSM1024(void) : DSMRX(7, 2, 0x03, 0)
 {
 }
 
-SpektrumDSM2048::SpektrumDSM2048(void) : SpektrumDSM(8, 3, 0x07, 1)
+DSM2048::DSM2048(void) : DSMRX(8, 3, 0x07, 1)
 {
 }
