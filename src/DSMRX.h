@@ -22,10 +22,6 @@
 
 #include <stdint.h>
 
-// Your application should implement these functions
-extern uint8_t dsmSerialAvailable(void);
-extern uint8_t dsmSerialRead(void);
-
 class DSMRX {
 
     private:

@@ -20,6 +20,10 @@
 
 #include "DSMRX.h"
 
+// Your application should implement these functions
+extern uint8_t dsmSerialAvailable(void);
+extern uint8_t dsmSerialRead(void);
+
 DSMRX::DSMRX(uint8_t rcChans, uint8_t chanShift, uint8_t chanMask, uint8_t valShift)
 {
     _rcChans = rcChans;
