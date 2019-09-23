@@ -20,7 +20,7 @@
 
 #include "DSMRX2.h"
 
-DSMRX::DSMRX(uint8_t rcChans, uint8_t chanShift, uint8_t chanMask, uint8_t valShift)
+DSMRX_2::DSMRX_2(uint8_t rcChans, uint8_t chanShift, uint8_t chanMask, uint8_t valShift)
 {
     _rcChans = rcChans;
     _chanShift = chanShift;
@@ -31,7 +31,7 @@ DSMRX::DSMRX(uint8_t rcChans, uint8_t chanShift, uint8_t chanMask, uint8_t valSh
     _lastInterruptMicros = 0;
 }
 
-void DSMRX::handleSerialEvent(uint8_t value, uint32_t usec)
+void DSMRX_2::handleSerialEvent(uint8_t value, uint32_t usec)
 {
     // Reset time 
     _lastInterruptMicros = usec;
@@ -72,7 +72,7 @@ void DSMRX::handleSerialEvent(uint8_t value, uint32_t usec)
 }
 
 
-bool DSMRX::gotNewFrame(void)
+bool DSMRX_2::gotNewFrame(void)
 {
     bool retval = _gotNewFrame;
     if (_gotNewFrame) {
@@ -81,36 +81,36 @@ bool DSMRX::gotNewFrame(void)
     return retval;
 }
 
-void DSMRX::getChannelValues(uint16_t values[], uint8_t count)
+void DSMRX_2::getChannelValues(uint16_t values[], uint8_t count)
 {
     for (uint8_t k=0; k<count; ++k) {
         values[k] = _rcValue[k] + 988;
     }
 }
 
-void DSMRX::getChannelValuesNormalized(float values[], uint8_t count)
+void DSMRX_2::getChannelValuesNormalized(float values[], uint8_t count)
 {
     for (uint8_t k=0; k<count; ++k) {
         values[k] = (_rcValue[k] - 512) / 512.f;
     }
 }
 
-uint8_t DSMRX::getFadeCount(void)
+uint8_t DSMRX_2::getFadeCount(void)
 {
     return _fadeCount;
 }
 
-bool DSMRX::timedOut(uint32_t usec, uint32_t maxMicros)
+bool DSMRX_2::timedOut(uint32_t usec, uint32_t maxMicros)
 {
     
     uint32_t lag = usec - _lastInterruptMicros;
     return  lag > maxMicros;
 }
 
-DSM1024::DSM1024(void) : DSMRX(7, 2, 0x03, 0)
+DSM1024_2::DSM1024_2(void) : DSMRX_2(7, 2, 0x03, 0)
 {
 }
 
-DSM2048::DSM2048(void) : DSMRX(8, 3, 0x07, 1)
+DSM2048_2::DSM2048_2(void) : DSMRX_2(8, 3, 0x07, 1)
 {
 }

@@ -22,7 +22,7 @@
 
 #include <stdint.h>
 
-class DSMRX {
+class DSMRX_2 {
 
     private:
 
@@ -45,7 +45,7 @@ class DSMRX {
 
     protected:
 
-        DSMRX(uint8_t rc, uint8_t cs, uint8_t cm, uint8_t vs);
+        DSMRX_2(uint8_t rc, uint8_t cs, uint8_t cm, uint8_t vs);
 
     public:
 
@@ -68,18 +68,18 @@ class DSMRX {
         bool timedOut(uint32_t usec, uint32_t maxMicros=40000);
 };
 
-class DSM1024 : public DSMRX {
+class DSM1024_2 : public DSMRX_2 {
 
     public:
 
-        DSM1024(void);
+        DSM1024_2(void);
 
 };
 
-class DSM2048 : public DSMRX {
+class DSM2048_2 : public DSMRX_2 {
 
     public:
 
-        DSM2048(void);
+        DSM2048_2(void);
 };
 

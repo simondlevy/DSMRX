@@ -60,7 +60,7 @@ class DSMRX {
         /**
          * Returns channel values in [1000,2000] interval
          */
-        void    getChannelValues(uint16_t values[], uint8_t count=8);
+        void  getChannelValues(uint16_t values[], uint8_t count=8);
 
         /**
          * Returns channel values in [-1,+1] interval
