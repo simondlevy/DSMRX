@@ -26,7 +26,7 @@ static const uint8_t CHANNELS = 8;
 
 DSM2048 rx;
 
-void coreTask(void * params)
+static void coreTask(void * params)
 {
     while (true) {
       
