@@ -1,8 +1,8 @@
 <img src="lemonrx.png" width=300>
 
 This libary allows you to access the signals on a Spektrum DSM
-serial receiver using an Arduino or other microcontroller.  It uses interrupts,
-rather than polling. The library provides two C++ classes: DSMRX1024, for
+serial receiver using an Arduino or other microcontroller.  It uses interrupts
+or timer tasks rather than polling. The library provides two C++ classes: DSMRX1024, for
 older receivers using seven channels and 10-bit precision; and DSMRX2048,
 for modern receivers (like the Lemon RX) using eight channels and 11-bit
 precision.  There is also a standalone

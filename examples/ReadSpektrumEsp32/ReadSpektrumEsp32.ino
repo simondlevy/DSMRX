@@ -1,9 +1,9 @@
 /*
-   Demo sketch for DSMRX library
+   Demo sketch for DSMRX library on ESP32
 
-   Displays channel values in interval [-1,+1]
+   Displays channel values in interval [1000, 2000]
 
-   Copyright (C) Simon D. Levy 2017
+   Copyright (C) Simon D. Levy 2019
 
    This file is part of DSMRX.
 
@@ -26,27 +26,36 @@ static const uint8_t CHANNELS = 8;
 
 DSM2048 rx;
 
-void serialEvent1(void)
+void coreTask(void * params)
 {
-    rx.handleSerialEvent(micros());
+    while (true) {
+      
+        if (Serial2.available()) {
+           rx.handleSerialEvent(micros()); 
+        }
+
+        delay(1);
+    } 
 }
 
 uint8_t dsmSerialAvailable(void)
 {
-    return Serial1.available();
+    return Serial2.available();
 }
 
 uint8_t dsmSerialRead(void)
 {
-    return Serial1.read();
+    return Serial2.read();
 }
-
 
 void setup(void)
 {
     Serial.begin(115000);
 
-    Serial1.begin(115000);
+    Serial2.begin(115000);
+
+    TaskHandle_t task;
+    xTaskCreatePinnedToCore(coreTask, "Task", 10000, NULL, 1, &task, 0); 
 }
 
 void loop(void)
@@ -57,9 +66,9 @@ void loop(void)
 
     else if (rx.gotNewFrame()) {
 
-        float values[CHANNELS];
+        uint16_t values[CHANNELS];
 
-        rx.getChannelValuesNormalized(values, CHANNELS);
+        rx.getChannelValues(values, CHANNELS);
 
         for (int k=0; k<CHANNELS; ++k) {
             Serial.print("Ch. ");

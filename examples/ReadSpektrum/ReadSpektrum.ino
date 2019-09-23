@@ -1,5 +1,5 @@
 /*
-   ReadSpektrum.ino : demo sketch for DSMRX library
+   Demo sketch for DSMRX library
 
    Displays channel values in interval [1000, 2000]
 

@@ -1,5 +1,5 @@
 /*
-   BindSpektrum.ino : Standalone sketch to bind a Spektrum satellite receiver
+   Standalone sketch to bind a Spektrum satellite receiver
    (e.g., Lemon RX) using a 5-volt Arduino (e.g., Uno, Mega)
 
    Adapted from code in http://www.makedronesbook.com/sites/makedronesbook.com/files/spekbind.ino_.zip
