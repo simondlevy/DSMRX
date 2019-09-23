@@ -28,19 +28,10 @@ DSM2048 rx;
 
 void serialEvent1(void)
 {
-    rx.handleSerialEvent(micros());
+    while (Serial1.available()) {
+        rx.handleSerialEvent(Serial1.read(), micros());
+    }
 }
-
-uint8_t dsmSerialAvailable(void)
-{
-    return Serial1.available();
-}
-
-uint8_t dsmSerialRead(void)
-{
-    return Serial1.read();
-}
-
 
 void setup(void)
 {

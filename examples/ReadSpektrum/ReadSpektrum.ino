@@ -24,21 +24,13 @@
 
 static const uint8_t CHANNELS = 8;
 
-DSM2048 rx;
+DSM2048_2 rx;
 
 void serialEvent1(void)
 {
-    rx.handleSerialEvent(micros());
-}
-
-uint8_t dsmSerialAvailable(void)
-{
-    return Serial1.available();
-}
-
-uint8_t dsmSerialRead(void)
-{
-    return Serial1.read();
+    while (Serial1.available()) {
+        rx.handleSerialEvent(Serial1.read(), micros());
+    }
 }
 
 void setup(void)

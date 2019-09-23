@@ -1,5 +1,5 @@
 /*
-   DSMRX.cpp : implementation of interrupt-based Spektrum DSM receiver for Arduino
+   Spektrum DSM receiver implementation
 
    Copyright (C) Simon D. Levy 2017
 
@@ -20,10 +20,6 @@
 
 #include "DSMRX.h"
 
-// Your application should implement these functions
-extern uint8_t dsmSerialAvailable(void);
-extern uint8_t dsmSerialRead(void);
-
 DSMRX::DSMRX(uint8_t rcChans, uint8_t chanShift, uint8_t chanMask, uint8_t valShift)
 {
     _rcChans = rcChans;
@@ -35,7 +31,7 @@ DSMRX::DSMRX(uint8_t rcChans, uint8_t chanShift, uint8_t chanMask, uint8_t valSh
     _lastInterruptMicros = 0;
 }
 
-void DSMRX::handleSerialEvent(uint32_t usec)
+void DSMRX::handleSerialEvent(uint8_t value, uint32_t usec)
 {
     // Reset time 
     _lastInterruptMicros = usec;
@@ -50,8 +46,8 @@ void DSMRX::handleSerialEvent(uint32_t usec)
     }
 
     // put the data in buffer
-    while ((dsmSerialAvailable()) && (_rxBufPos < BUFFER_SIZE)) {
-        _rxBuf[_rxBufPos++] = dsmSerialRead();
+    if (_rxBufPos < BUFFER_SIZE) {
+        _rxBuf[_rxBufPos++] = value;
     }
 
     // parse frame if done

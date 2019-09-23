@@ -31,21 +31,11 @@ static void coreTask(void * params)
     while (true) {
       
         if (Serial2.available()) {
-           rx.handleSerialEvent(micros()); 
+           rx.handleSerialEvent(Serial2.read(), micros()); 
         }
 
         delay(1);
     } 
-}
-
-uint8_t dsmSerialAvailable(void)
-{
-    return Serial2.available();
-}
-
-uint8_t dsmSerialRead(void)
-{
-    return Serial2.read();
 }
 
 void setup(void)

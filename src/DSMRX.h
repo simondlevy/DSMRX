@@ -1,5 +1,5 @@
 /*
-   DSMRX.h : header for interrupt-based Spektrum DSM receiver for Arduino
+   Spektrum DSM receiver class
 
    Copyright (C) Simon D. Levy 2017
 
@@ -49,23 +49,23 @@ class DSMRX {
 
     public:
 
-        void handleSerialEvent(uint32_t usec);
+        void handleSerialEvent(uint8_t value, uint32_t usec);
 
         bool gotNewFrame(void);
 
         /**
          * Returns channel values in [1000,2000] interval
          */
-        void  getChannelValues(uint16_t values[], uint8_t count=8);
+        void getChannelValues(uint16_t values[], uint8_t count=8);
 
         /**
          * Returns channel values in [-1,+1] interval
          */
-        void    getChannelValuesNormalized(float values[], uint8_t count=8);
+        void getChannelValuesNormalized(float values[], uint8_t count=8);
 
         uint8_t getFadeCount(void);
 
-        bool    timedOut(uint32_t usec, uint32_t maxMicros=40000);
+        bool timedOut(uint32_t usec, uint32_t maxMicros=40000);
 };
 
 class DSM1024 : public DSMRX {
