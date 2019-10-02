@@ -3,6 +3,8 @@
 
    Displays channel values in interval [1000, 2000]
 
+   Uses Serial2 on pin 16
+
    Copyright (C) Simon D. Levy 2019
 
    This file is part of DSMRX.
