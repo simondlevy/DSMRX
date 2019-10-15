@@ -3,7 +3,7 @@
 
    Displays channel values in interval [1000, 2000]
 
-   Uses SoftSerial on pin XXX
+   Uses SoftSerial on GPIO pin 4
 
    Dependencies:
 

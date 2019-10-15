@@ -24,7 +24,7 @@
 
 static const uint8_t CHANNELS = 8;
 
-DSM2048_2 rx;
+DSM2048 rx;
 
 void serialEvent1(void)
 {
