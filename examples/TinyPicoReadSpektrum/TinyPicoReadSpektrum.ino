@@ -3,12 +3,6 @@
 
    Displays channel values in interval [1000, 2000]
 
-   Uses SoftSerial on GPIO pin 4
-
-   Dependencies:
-
-     https://github.com/plerup/espsoftwareserial
-
    Copyright (C) Simon D. Levy 2019
 
    This file is part of DSMRX.
@@ -27,22 +21,20 @@
  */
 
 #include <DSMRX.h>
-#include <SoftwareSerial.h>
+
+static const uint8_t SERIAL1_RX = 32;
+static const uint8_t SERIAL1_TX = 33; // unused
 
 static const uint8_t CHANNELS = 8;
 
-static const uint8_t SERIAL_PIN = 4;
-
 DSM2048 rx;
-
-SoftwareSerial softwareSerial;
 
 static void coreTask(void * params)
 {
     while (true) {
       
-        if (softwareSerial.available()) {
-           rx.handleSerialEvent(softwareSerial.read(), micros()); 
+        if (Serial1.available()) {
+           rx.handleSerialEvent(Serial1.read(), micros()); 
         }
 
         delay(1);
@@ -53,7 +45,7 @@ void setup(void)
 {
     Serial.begin(115000);
 
-    softwareSerial.begin(115000, SERIAL_PIN);
+    Serial1.begin(115000, SERIAL_8N1, SERIAL1_RX, SERIAL1_TX);
 
     TaskHandle_t task;
     xTaskCreatePinnedToCore(coreTask, "Task", 10000, NULL, 1, &task, 0); 
