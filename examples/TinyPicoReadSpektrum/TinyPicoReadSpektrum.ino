@@ -22,8 +22,8 @@
 
 #include <DSMRX.h>
 
-static const uint8_t SERIAL1_RX = 32;
-static const uint8_t SERIAL1_TX = 33; // unused
+static const uint8_t SERIAL1_RX = 4;
+static const uint8_t SERIAL1_TX = 14; // unused
 
 static const uint8_t CHANNELS = 8;
 
