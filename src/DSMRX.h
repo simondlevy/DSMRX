@@ -61,7 +61,20 @@ class DSMRX {
         /**
          * Returns channel values in [-1,+1] interval
          */
-        void getChannelValuesNormalized(float values[], uint8_t count=8);
+        void getChannelValues(float values[], uint8_t count=8);
+
+        /**
+         * Returns channel values in [-1,+1] interval
+         */
+        void getChannelValues(
+                float &c1,
+                float &c2,
+                float &c3,
+                float &c4,
+                float &c5,
+                float &c6,
+                float &c7,
+                float &c8);
 
         uint8_t getFadeCount(void);
 
