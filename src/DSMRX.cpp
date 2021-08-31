@@ -95,31 +95,6 @@ void DSMRX::getChannelValues(float values[], uint8_t count)
     }
 }
 
-void DSMRX::getChannelValues(
-        float &c1,
-        float &c2,
-        float &c3,
-        float &c4,
-        float &c5,
-        float &c6,
-        float &c7,
-        float &c8)
-
-{
-    float values[8] = {};
-
-    getChannelValues(values, 8);
-
-    c1 = values[0];
-    c2 = values[1];
-    c3 = values[2];
-    c4 = values[3];
-    c5 = values[4];
-    c6 = values[5];
-    c7 = values[6];
-    c8 = values[7];
-}
-
 uint8_t DSMRX::getFadeCount(void)
 {
     return _fadeCount;

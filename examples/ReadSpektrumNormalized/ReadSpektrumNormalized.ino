@@ -57,6 +57,7 @@ void loop(void)
             Serial.print("Ch. ");
             Serial.print(k+1);
             Serial.print(": ");
+            Serial.print(values[k]>=0 ? "+" : "");
             Serial.print(values[k]);
             Serial.print("    ");
         }
