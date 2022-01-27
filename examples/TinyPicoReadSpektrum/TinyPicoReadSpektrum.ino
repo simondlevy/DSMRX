@@ -76,5 +76,5 @@ void loop(void)
     }
 
     // Need a little loop delay
-    delay(5);
+    delay(1);
 }
