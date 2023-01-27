@@ -1,5 +1,5 @@
 /*
-   Demo sketch for DSMRX library on ESP32
+   Demo sketch for dsmrx library on ESP32
 
    Displays channel values in interval [1000, 2000]
 
@@ -7,26 +7,26 @@
 
    Copyright (C) Simon D. Levy 2019
 
-   This file is part of DSMRX.
+   This file is part of dsmrx.
 
-   DSMRX is free software: you can redistribute it and/or modify
+   dsmrx is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
-   DSMRX is distributed in the hope that it will be useful,
+   dsmrx is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
    You should have received a copy of the GNU General Public License
-   along with DSMRX.  If not, see <http://www.gnu.org/licenses/>.
+   along with dsmrx.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <DSMRX.h>
+#include <dsmrx.h>
 
 static const uint8_t CHANNELS = 8;
 
-DSM2048 rx;
+Dsm2048 rx;
 
 static void coreTask(void * params)
 {

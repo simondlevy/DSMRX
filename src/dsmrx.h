@@ -22,7 +22,7 @@
 
 #include <stdint.h>
 
-class DSMRX {
+class Dsmrx {
 
     private:
 
@@ -45,7 +45,7 @@ class DSMRX {
 
     protected:
 
-        DSMRX(uint8_t rcChans, uint8_t chanShift, uint8_t chanMask, uint8_t valShift)
+        Dsmrx(uint8_t rcChans, uint8_t chanShift, uint8_t chanMask, uint8_t valShift)
         {
             _rcChans = rcChans;
             _chanShift = chanShift;
@@ -139,24 +139,24 @@ class DSMRX {
             return  lag > maxMicros;
         }
 
-}; // class DSMRX 
+}; // class Dsmrx 
 
-class DSM1024 : public DSMRX {
+class Dsm1024 : public Dsmrx {
 
     public:
 
-        DSM1024(void)
-            : DSMRX(7, 2, 0x03, 0)        
+        Dsm1024(void)
+            : Dsmrx(7, 2, 0x03, 0)        
         {
         }
 };
 
-class DSM2048 : public DSMRX {
+class Dsm2048 : public Dsmrx {
 
     public:
 
-        DSM2048(void)
-            : DSMRX(8, 3, 0x07, 1)
+        Dsm2048(void)
+            : Dsmrx(8, 3, 0x07, 1)
         {
         }
 };
