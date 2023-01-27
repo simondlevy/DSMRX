@@ -45,41 +45,118 @@ class DSMRX {
 
     protected:
 
-        DSMRX(uint8_t rc, uint8_t cs, uint8_t cm, uint8_t vs);
+        DSMRX(uint8_t rcChans, uint8_t chanShift, uint8_t chanMask, uint8_t valShift)
+        {
+            _rcChans = rcChans;
+            _chanShift = chanShift;
+            _chanMask = chanMask;
+            _valShift = valShift;
+
+            _gotNewFrame = false;
+            _lastInterruptMicros = 0;
+        }
 
     public:
 
-        void handleSerialEvent(uint8_t value, uint32_t usec);
+        void handleSerialEvent(uint8_t value, uint32_t usec)
+        {
+            // Reset time 
+            _lastInterruptMicros = usec;
 
-        bool gotNewFrame(void);
+            // check for new frame, i.e. more than 2.5ms passed
+            static uint32_t spekTimeLast;
+            uint32_t spekTimeNow = usec;
+            uint32_t spekInterval = spekTimeNow - spekTimeLast;
+            spekTimeLast = spekTimeNow;
+            if (spekInterval > 2500) {
+                _rxBufPos = 0;
+            }
+
+            // put the data in buffer
+            if (_rxBufPos < BUFFER_SIZE) {
+                _rxBuf[_rxBufPos++] = value;
+            }
+
+            // parse frame if done
+            if (_rxBufPos == BUFFER_SIZE) {
+
+                // grab fade count
+                _fadeCount = _rxBuf[0];
+
+                // convert to channel data in [0,1024]
+                for (int b = 2; b < BUFFER_SIZE; b += 2) {
+                    uint8_t bh = _rxBuf[b];
+                    uint8_t bl = _rxBuf[b+1];
+                    uint8_t spekChannel = 0x0F & (bh >> _chanShift);
+                    if (spekChannel < _rcChans) {
+                        _rcValue[spekChannel] =
+                            ((((uint16_t)(bh & _chanMask) << 8) + bl) >> _valShift);
+                    }
+                }
+
+                // we have a new frame
+                _gotNewFrame = true;
+            }
+        }
+
+        bool gotNewFrame(void)
+        {
+            bool retval = _gotNewFrame;
+            if (_gotNewFrame) {
+                _gotNewFrame = false;
+            }
+            return retval;
+        }
 
         /**
          * Returns channel values in [1000,2000] interval
          */
-        void getChannelValues(uint16_t values[], uint8_t count=8);
+        void getChannelValues(uint16_t values[], uint8_t count=8)
+        {
+            for (uint8_t k=0; k<count; ++k) {
+                values[k] = _rcValue[k] + 988;
+            }
+        }
 
         /**
          * Returns channel values in [-1,+1] interval
          */
-        void getChannelValues(float values[], uint8_t count=8);
+        void getChannelValues(float values[], uint8_t count=8)
+        {
+            for (uint8_t k=0; k<count; ++k) {
+                values[k] = (_rcValue[k] - 512) / 512.f;
+            }
+        }
 
-        uint8_t getFadeCount(void);
+        uint8_t getFadeCount(void)
+        {
+            return _fadeCount;
+        }
 
-        bool timedOut(uint32_t usec, uint32_t maxMicros=40000);
-};
+        bool timedOut(uint32_t usec, uint32_t maxMicros=40000)
+        {
+            uint32_t lag = usec - _lastInterruptMicros;
+            return  lag > maxMicros;
+        }
+
+}; // class DSMRX 
 
 class DSM1024 : public DSMRX {
 
     public:
 
-        DSM1024(void);
-
+        DSM1024(void)
+            : DSMRX(7, 2, 0x03, 0)        
+        {
+        }
 };
 
 class DSM2048 : public DSMRX {
 
     public:
 
-        DSM2048(void);
+        DSM2048(void)
+            : DSMRX(8, 3, 0x07, 1)
+        {
+        }
 };
-
