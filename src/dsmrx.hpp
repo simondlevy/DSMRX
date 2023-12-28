@@ -58,7 +58,7 @@ class Dsmrx {
 
     public:
 
-        void handleSerialEvent(uint8_t value, uint32_t usec)
+        void parse(uint8_t value, uint32_t usec)
         {
             // Reset time 
             _lastInterruptMicros = usec;

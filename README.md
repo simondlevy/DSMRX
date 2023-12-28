@@ -14,7 +14,7 @@ For maximum flexibility, the <b>DSMRX</b> class does not contain any
 Arduino-specific code.  Instead, as shown in this
 [example](https://github.com/simondlevy/DSMRX/blob/master/examples/ReadSpektrum/ReadSpektrum.ino#L27-L42),
 you write your own interrupt handler or timer task, which calls the
-<b>DSMRX::handleSerialEvent()</b> method.
+<b>DSMRX::parse()</b> method.
 
 I have tested this library only on the DSMRX2048 class.
 

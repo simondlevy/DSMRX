@@ -33,7 +33,7 @@ static void coreTask(void * params)
     while (true) {
       
         if (Serial2.available()) {
-           rx.handleSerialEvent(Serial2.read(), micros()); 
+           rx.parse(Serial2.read(), micros()); 
         }
 
         delay(1);

@@ -30,7 +30,7 @@ Dsm2048 rx;
 void serialEvent1(void)
 {
     while (Serial1.available()) {
-        rx.handleSerialEvent(Serial1.read(), micros());
+        rx.parse(Serial1.read(), micros());
     }
 }
 
