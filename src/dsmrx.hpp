@@ -24,7 +24,7 @@
 
 class Dsmrx {
 
-    private:
+    protected:
 
         static const uint8_t BUFFER_SIZE  = 16;
         static const uint8_t MAX_CHANS    = 8;
@@ -159,4 +159,16 @@ class Dsm2048 : public Dsmrx {
             : Dsmrx(8, 3, 0x07, 1)
         {
         }
+
+        // For when constructor won't work
+        void init(void)
+        {
+            _rcChans = 8;
+            _chanShift = 3;
+            _chanMask = 0x07;
+            _valShift = 1;
+
+            _gotNewFrame = false;
+            _lastInterruptMicros = 0;
+         }
 };
