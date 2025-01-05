@@ -133,7 +133,7 @@ class Dsmrx {
             return _fadeCount;
         }
 
-        bool timedOut(uint32_t usec, uint32_t maxMicros=40000)
+        bool timedOut(uint32_t usec, uint32_t maxMicros=100000)
         {
             uint32_t lag = usec - _lastInterruptMicros;
             return  lag > maxMicros;
