@@ -1,16 +1,16 @@
 SKETCH = ReadSpektrum
 
-BOARD = teensy:avr:teensy40
+FQBN = teensy:avr:teensy40
 
 PORT = /dev/ttyACM0
 
 LIBS = $(HOME)/Documents/Arduino/libraries
 
 build: $(SKETCH).ino
-	arduino-cli compile --libraries $(LIBS) --libraries ../.. --fqbn $(BOARD) $(SKETCH).ino
+	arduino-cli compile --libraries $(LIBS) --libraries ../../.. --fqbn $(FQBN) $(SKETCH).ino
 
 flash:
-	arduino-cli upload -p $(PORT) --fqbn $(BOARD) .
+	arduino-cli upload -p $(PORT) --fqbn $(FQBN) .
 
 clean:
 	rm -rf obj
@@ -19,8 +19,4 @@ edit:
 	vim $(SKETCH).ino
 
 listen:
-	miniterm.py $(PORT) 115200
-
-viz:
-	./imuviz.py
-
+	miniterm.py $(PORT) 115200 --exit-char 3 # exit on CTRL-C

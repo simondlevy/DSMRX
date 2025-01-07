@@ -26,10 +26,10 @@ static const uint8_t CHANNELS = 8;
 
 Dsm2048 rx;
 
-void serialEvent2(void)
+void serialEvent1(void)
 {
-    while (Serial2.available()) {
-        rx.parse(Serial2.read(), micros());
+    while (Serial1.available()) {
+        rx.parse(Serial1.read(), micros());
     }
 }
 
@@ -37,7 +37,7 @@ void setup(void)
 {
     Serial.begin(115000);
 
-    Serial2.begin(115000);
+    Serial1.begin(115000);
 }
 
 void loop(void)
