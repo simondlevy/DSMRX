@@ -22,7 +22,7 @@
 
 #include <dsmrx.hpp>
 
-static const uint8_t CHANNELS = 8;
+static const uint8_t CHANNELS = 6;
 
 Dsm2048 rx;
 
@@ -51,7 +51,7 @@ void loop(void)
 
         float values[CHANNELS];
 
-        rx.getChannelValues(values, CHANNELS);
+        rx.getChannelValuesMlp6Dsm(values);
 
         for (int k=0; k<CHANNELS; ++k) {
             Serial.print("Ch. ");

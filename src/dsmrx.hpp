@@ -118,6 +118,13 @@ class Dsmrx {
             }
         }
 
+        void getChannelValuesMlp6Dsm(float values[])
+        {
+            for (uint8_t k=0; k<6; ++k) {
+                values[k] = 1.5 * ((_rcValue[k] - 512) / 512.f);
+            }
+        }
+
         uint8_t getFadeCount(void)
         {
             return _fadeCount;
