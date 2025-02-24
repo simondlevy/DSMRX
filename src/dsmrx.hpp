@@ -109,16 +109,6 @@ class Dsmrx {
         }
 
         /**
-         * Returns channel values in [1000,2000] interval
-         */
-        void getChannelValues(uint16_t values[], uint8_t count=8)
-        {
-            for (uint8_t k=0; k<count; ++k) {
-                values[k] = _rcValue[k] + 988;
-            }
-        }
-
-        /**
          * Returns channel values in [-1,+1] interval
          */
         void getChannelValues(float values[], uint8_t count=8)

@@ -1,4 +1,4 @@
-SKETCH = ReadSpektrumNormalized
+SKETCH = Bind
 
 FQBN = teensy:avr:teensy40
 
