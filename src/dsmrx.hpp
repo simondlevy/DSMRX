@@ -108,10 +108,13 @@ class Dsmrx {
             return retval;
         }
 
-        void getChannelValues(uint16_t values[], uint8_t count=8)
+        /**
+         * Returns channel values in old [988,20120 usec format
+         */
+         void getChannelValues(uint16_t values[], uint8_t count=8)
         {
             for (uint8_t k=0; k<count; ++k) {
-                values[k] = _rcValue[k];
+                values[k] = _rcValue[k] + 988;
             }
         }
 
