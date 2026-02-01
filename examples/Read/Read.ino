@@ -51,7 +51,7 @@ void loop(void)
 
         float values[CHANNELS];
 
-        rx.getChannelValuesMlp6Dsm(values);
+        rx.getChannelValues(values);
 
         for (int k=0; k<CHANNELS; ++k) {
             Serial.print("Ch. ");

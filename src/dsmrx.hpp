@@ -109,16 +109,6 @@ class Dsmrx {
         }
 
         /**
-         * Returns channel values in old [988,20120 usec format
-         */
-         void getChannelValues(uint16_t values[], uint8_t count=8)
-        {
-            for (uint8_t k=0; k<count; ++k) {
-                values[k] = _rcValue[k] + 988;
-            }
-        }
-
-        /**
          * Returns channel values in [-1,+1] interval
          */
         void getChannelValues(float values[], uint8_t count=8)
@@ -128,7 +118,10 @@ class Dsmrx {
             }
         }
 
-        void getChannelValuesMlp6Dsm(float values[])
+        /**
+         * Returns channel values in [-1,+1] interval for MLP6DSM transmitter
+         */
+         void getChannelValuesMlp6Dsm(float values[])
         {
             for (uint8_t k=0; k<6; ++k) {
                 values[k] = 1.5 * ((_rcValue[k] - 512) / 512.f);
